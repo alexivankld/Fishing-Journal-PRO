@@ -1,0 +1,2955 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎣 Рыболовный Журнал PRO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Ledger palette: paper, ink, river, brass — flat, no gradients */
+            --primary: #1c2a28;
+            --secondary: #2f6f6a;
+            --accent: #a9762f;
+            --accent2: #8a5f26;
+            --bg: #f3f2ec;
+            --card: #ffffff;
+            --shadow: 0 1px 2px rgba(28, 42, 40, 0.06);
+            --shadow-hover: 0 2px 8px rgba(28, 42, 40, 0.10);
+            --radius: 10px;
+            --danger: #b3463f;
+            --success: #4b7a4f;
+            --warning: #b8863b;
+            --text: #1c2a28;
+            --text-light: #6b7a74;
+            --border: #dfded4;
+            --gradient: var(--secondary);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        h1, h2, h3, .page-title, .logo, nav .logo, .hero-section h1 {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        /* ===== СТРАНИЦА ВХОДА ===== */
+        .auth-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--gradient);
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 1px 3px rgba(28, 42, 40, 0.12);
+        }
+
+        .auth-container .logo {
+            text-align: center;
+            font-size: 2em;
+            font-weight: 300;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .auth-container .logo span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .auth-container .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 0.9em;
+        }
+
+        .auth-container .form-group {
+            margin-bottom: 15px;
+        }
+
+        .auth-container .form-group label {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.85em;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .auth-container .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .auth-container .form-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .auth-container .btn-auth {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-container .btn-auth:hover {
+            transform: translateY(-2px);
+        }
+
+        .auth-container .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+
+        .auth-container .auth-switch a {
+            color: var(--secondary);
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .auth-container .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-container .error-msg {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .auth-container .success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        nav {
+            background: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        nav .logo {
+            font-size: 1.4em;
+            font-weight: 300;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav .logo span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+        }
+
+        .nav-tab.active {
+            background: var(--accent);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-export {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .btn-export:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-import {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .btn-import:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-logout {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .btn-logout:hover {
+            transform: scale(1.05);
+        }
+
+        .user-info {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info .username {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-content {
+            display: none;
+        }
+
+        .app-content.active {
+            display: block;
+        }
+
+        .page-title {
+            font-size: 1.8em;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title span {
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        /* ===== ГЛАВНАЯ ===== */
+        .hero-section {
+            background: var(--primary);
+            border-radius: var(--radius);
+            padding: 44px 40px;
+            color: white;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .hero-section h1 {
+            font-size: 2.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+
+        .hero-section h1 span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .hero-section p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .hero-section .cta-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hero-section .cta-buttons .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .hero-section .cta-buttons .btn-primary-custom {
+            background: var(--accent2);
+            color: white;
+            font-weight: 700;
+        }
+
+        .hero-section .cta-buttons .btn-primary-custom:hover {
+            background: #714c1e;
+        }
+
+        .hero-section .cta-buttons .btn-secondary-custom {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+
+        .hero-section .cta-buttons .btn-secondary-custom:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--secondary);
+        }
+
+        .feature-card .icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 0.9em;
+        }
+
+        /* ===== СТАТИСТИКА ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 18px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-bottom: 4px solid var(--secondary);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-card .number {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-card .label {
+            color: var(--text-light);
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .stat-card.gold { border-bottom-color: var(--accent); }
+        .stat-card.gold .number { color: var(--accent2); }
+        .stat-card.success { border-bottom-color: var(--success); }
+        .stat-card.success .number { color: var(--success); }
+        .stat-card.danger { border-bottom-color: var(--danger); }
+        .stat-card.danger .number { color: var(--danger); }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .analytics-card {
+            background: var(--card);
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .analytics-card h4 {
+            color: var(--text-light);
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .analytics-card .value {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .analytics-card .sub {
+            color: var(--text-light);
+            font-size: 0.8em;
+        }
+
+        .analytics-card.best {
+            border-left-color: var(--accent);
+        }
+        .analytics-card.best .value {
+            color: var(--accent2);
+        }
+
+        /* ===== ФОРМА ===== */
+        .form-section {
+            background: var(--card);
+            padding: 25px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .form-section h3 {
+            color: var(--primary);
+            margin-bottom: 18px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 9px 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+            background: white;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .form-group .add-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            margin-top: 4px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .form-group .add-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .form-group-with-btn {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .form-group-with-btn select {
+            flex: 1;
+        }
+
+        .form-group-with-btn .add-btn {
+            margin-bottom: 0;
+            padding: 9px 14px;
+            height: 41px;
+            white-space: nowrap;
+        }
+
+        .fish-entry {
+            background: #f6fafa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            align-items: end;
+        }
+
+        .fish-entry .form-group {
+            margin-bottom: 0;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .btn-success:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-danger:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-warning:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-edit {
+            background: var(--accent2);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        .btn-edit:hover {
+            transform: scale(1.05);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap {
+            overflow-x: auto;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+
+        table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eef4f4;
+        }
+
+        table tr:hover {
+            background: #f6fafa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .badge-fish { background: #d4edda; color: #155724; }
+        .badge-place { background: #d1ecf1; color: #0c5460; }
+        .badge-bait { background: #fff3cd; color: #856404; }
+
+        /* ===== ТОП-10 ===== */
+        .top-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .top-item {
+            background: var(--card);
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            border-left: 4px solid var(--border);
+        }
+
+        .top-item:hover {
+            transform: translateX(5px);
+        }
+
+        .top-item .rank {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--text-light);
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .top-item .rank.gold { color: #ffd700; }
+        .top-item .rank.silver { color: #c0c0c0; }
+        .top-item .rank.bronze { color: #cd7f32; }
+
+        .top-item .info {
+            flex: 1;
+        }
+        .top-item .info .name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .top-item .info .meta {
+            font-size: 0.85em;
+            color: var(--text-light);
+        }
+        .top-item .weight {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: var(--secondary);
+        }
+
+        /* ===== ФИЛЬТРЫ ===== */
+        .filters-bar {
+            background: var(--card);
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .filters-bar .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 130px;
+            flex: 1;
+        }
+
+        .filters-bar .filter-group label {
+            font-size: 0.7em;
+            text-transform: uppercase;
+            color: var(--text-light);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .filters-bar .filter-group select,
+        .filters-bar .filter-group input {
+            padding: 6px 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            background: white;
+            width: 100%;
+        }
+
+        .filters-bar .filter-group select:focus,
+        .filters-bar .filter-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .filters-bar .filter-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            min-width: 140px;
+        }
+
+        .filters-bar .filter-actions button {
+            padding: 6px 16px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        /* ===== ГРАФИКИ ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .chart-container {
+            background: var(--card);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .chart-container h4 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+
+        .chart-container canvas {
+            max-height: 250px;
+            max-width: 100%;
+        }
+
+        /* ===== АТЛАС ===== */
+        .atlas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .map-placeholder {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        .map-placeholder .icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .map-placeholder p {
+            color: var(--text-light);
+        }
+
+        .places-list {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .places-list .place-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .places-list .place-item h5 {
+            color: var(--primary);
+        }
+
+        .places-list .place-item .coords {
+            font-size: 0.8em;
+            color: var(--text-light);
+            font-family: monospace;
+        }
+
+        .places-list .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .places-list .empty-state .emoji {
+            font-size: 4em;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        /* ===== МОДАЛЬНОЕ ОКНО ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 30px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 1px 3px rgba(28, 42, 40, 0.12);
+        }
+
+        .modal-content h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .modal-content .form-group {
+            margin-bottom: 12px;
+        }
+
+        .modal-content .form-actions {
+            margin-top: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state .emoji {
+            font-size: 4em;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: var(--primary);
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+
+        footer span {
+            color: var(--accent);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 14px;
+            }
+            .atlas-grid {
+                grid-template-columns: 1fr;
+            }
+            .map-placeholder {
+                min-height: 200px;
+                padding: 20px;
+            }
+            .hero-section {
+                padding: 26px 20px;
+            }
+            .hero-section h1 {
+                font-size: 1.5em;
+            }
+            .hero-section p {
+                font-size: 1em;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .fish-entry {
+                grid-template-columns: 1fr;
+            }
+            .filters-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filters-bar .filter-group {
+                min-width: 100%;
+            }
+            .filters-bar .filter-actions {
+                min-width: 100%;
+                justify-content: stretch;
+            }
+            .filters-bar .filter-actions button {
+                flex: 1;
+                min-height: 40px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .form-group-with-btn {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .form-group-with-btn .add-btn {
+                height: auto;
+                min-height: 40px;
+            }
+
+            /* Nav: keep tabs full-size and legible, scroll horizontally instead of shrinking */
+            nav {
+                padding: 10px 14px;
+                gap: 8px;
+            }
+            nav .logo {
+                font-size: 1.05em;
+            }
+            .nav-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                width: 100%;
+                padding-bottom: 4px;
+                scrollbar-width: thin;
+                -webkit-overflow-scrolling: touch;
+            }
+            .nav-tab {
+                font-size: 12px;
+                padding: 8px 14px;
+                min-height: 36px;
+                flex-shrink: 0;
+            }
+            .nav-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .nav-actions .btn-export,
+            .nav-actions .btn-import,
+            .nav-actions .btn-danger,
+            .nav-actions .btn-logout {
+                font-size: 11px;
+                padding: 8px 12px;
+                min-height: 34px;
+            }
+            .user-info {
+                order: -1;
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 4px;
+            }
+            table {
+                font-size: 12px;
+            }
+            .top-item {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 26px 22px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .page-title {
+                font-size: 1.4em;
+            }
+            .form-section {
+                padding: 18px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== СТРАНИЦА ВХОДА ===== -->
+    <div id="authPage" class="auth-page">
+        <div class="auth-container">
+            <div class="logo">🎣 <span>Рыболовный</span> Журнал PRO</div>
+            <div class="subtitle">Войдите или зарегистрируйтесь</div>
+            <div id="authError" class="error-msg"></div>
+            <div id="authSuccess" class="success-msg"></div>
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>👤 Логин</label>
+                    <input type="text" id="loginUsername" placeholder="Введите логин">
+                </div>
+                <div class="form-group">
+                    <label>🔒 Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="Введите пароль">
+                </div>
+                <button class="btn-auth" onclick="loginUser()">🔑 Войти</button>
+                <div class="auth-switch">
+                    Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a>
+                </div>
+            </div>
+            <div id="registerForm" style="display:none;">
+                <div class="form-group">
+                    <label>👤 Логин</label>
+                    <input type="text" id="registerUsername" placeholder="Придумайте логин">
+                </div>
+                <div class="form-group">
+                    <label>🔒 Пароль</label>
+                    <input type="password" id="registerPassword" placeholder="Придумайте пароль">
+                </div>
+                <div class="form-group">
+                    <label>🔒 Подтверждение</label>
+                    <input type="password" id="registerPassword2" placeholder="Повторите пароль">
+                </div>
+                <button class="btn-auth" onclick="registerUser()">📝 Зарегистрироваться</button>
+                <div class="auth-switch">
+                    Уже есть аккаунт? <a onclick="showLogin()">Войти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ===== -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <h3>✏️ Редактирование записи</h3>
+            <div class="form-grid">
+                <div class="form-group"><label>Дата</label><input type="date" id="editDate"></div>
+                <div class="form-group"><label>Водоём</label><input type="text" id="editPlace" placeholder="Водоём"></div>
+                <div class="form-group"><label>Точка</label><input type="text" id="editSpot" placeholder="Точка"></div>
+                <div class="form-group"><label>Вид рыбы</label><select id="editSpecies"><option value="">Выберите...</option></select></div>
+                <div class="form-group"><label>Вес (г)</label><input type="number" id="editWeight" step="1"></div>
+                <div class="form-group"><label>Длина (см)</label><input type="number" id="editLength" step="0.5"></div>
+                <div class="form-group"><label>Насадка</label><input type="text" id="editBait" placeholder="Насадка"></div>
+                <div class="form-group"><label>Прикормка</label><input type="text" id="editFeed" placeholder="Прикормка"></div>
+                <div class="form-group"><label>Время поимки</label><input type="time" id="editTime"></div>
+                <div class="form-group"><label>Глубина (м)</label><input type="number" id="editDepth" step="0.1"></div>
+                <div class="form-group full-width"><label>Заметки</label><textarea id="editNotes" rows="2" placeholder="Заметки"></textarea></div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-primary" onclick="saveEdit()">💾 Сохранить</button>
+                <button class="btn-danger" onclick="closeEditModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ОСНОВНОЕ ПРИЛОЖЕНИЕ ===== -->
+    <div id="appContent" class="app-content">
+
+        <nav>
+            <div class="logo">🎣 <span>Рыболовный</span> Журнал PRO</div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-page="home">🏠 Главная</button>
+                <button class="nav-tab" data-page="add">📝 Новая рыбалка</button>
+                <button class="nav-tab" data-page="journal">🐟 Журнал</button>
+                <button class="nav-tab" data-page="top">🏆 Топ-10</button>
+                <button class="nav-tab" data-page="atlas">🗺️ Атлас</button>
+                <button class="nav-tab" data-page="analytics">📈 Аналитика</button>
+            </div>
+            <div class="nav-actions">
+                <div class="user-info">👤 <span class="username" id="currentUsername">Пользователь</span></div>
+                <button class="btn-export" onclick="exportData()">📥 Экспорт</button>
+                <button class="btn-import" onclick="document.getElementById('fileInput').click()">📤 Импорт</button>
+                <input type="file" id="fileInput" accept=".json" onchange="importData(event)">
+                <button class="btn-danger" onclick="resetAllData()" title="Удалить все уловы и места этого аккаунта">🗑️ Очистить всё</button>
+                <button class="btn-logout" onclick="logoutUser()">🚪 Выйти</button>
+            </div>
+        </nav>
+
+        <div class="container">
+
+            <!-- ===== ГЛАВНАЯ ===== -->
+            <div class="page active" id="page-home">
+                <div class="hero-section">
+                    <h1>🎣 <span>Рыболовный Журнал</span> PRO</h1>
+                    <p>Профессиональный инструмент для ведения дневника рыболова. Аналитика, карты, статистика — всё в одном месте.</p>
+                    <div class="cta-buttons">
+                        <button class="btn btn-primary-custom" onclick="switchPage('add')">📝 Добавить рыбалку</button>
+                        <button class="btn btn-secondary-custom" onclick="switchPage('analytics')">📊 Посмотреть аналитику</button>
+                    </div>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card"><div class="icon">📊</div><h3>Глубокая аналитика</h3><p>Автоматический анализ погоды, давления, ветра и фаз Луны.</p></div>
+                    <div class="feature-card"><div class="icon">🗺️</div><h3>Атлас мест</h3><p>Сохраняйте координаты любимых мест. Визуализация всех точек.</p></div>
+                    <div class="feature-card"><div class="icon">🏆</div><h3>Рейтинги и Топ-10</h3><p>Автоматический расчёт лучших рыбалок, насадок и мест.</p></div>
+                    <div class="feature-card"><div class="icon">🔒</div><h3>Личный кабинет</h3><p>Все данные хранятся в вашем личном профиле.</p></div>
+                </div>
+
+                <div style="background:var(--card);border-radius:var(--radius);padding:25px;border:1px solid var(--border);">
+                    <h3 style="color:var(--primary);margin-bottom:10px;">ℹ️ О проекте</h3>
+                    <p style="color:var(--text-light);">
+                        <strong>🎣 Рыболовный Журнал PRO</strong> — это профессиональный инструмент для рыбаков.
+                    </p>
+                    <p style="color:var(--text-light);margin-top:8px;">
+                        <strong>Версия:</strong> 4.0 PRO | <strong>Разработчик:</strong> Fishing Journal Team | <strong>Год:</strong> 2026
+                    </p>
+                </div>
+            </div>
+
+            <!-- ===== НОВАЯ РЫБАЛКА ===== -->
+            <div class="page" id="page-add">
+                <div class="page-title">📝 <span>Новая рыбалка</span></div>
+                <div class="form-section">
+                    <h3>📋 Общая информация</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>📅 Дата</label><input type="date" id="tripDate"></div>
+                        <div class="form-group">
+                            <label>🏞️ Водоём</label>
+                            <div class="form-group-with-btn">
+                                <select id="tripPlace"><option value="">Выберите...</option></select>
+                                <button class="add-btn" onclick="addNewPlace()">➕</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>📍 Точка</label>
+                            <div class="form-group-with-btn">
+                                <select id="tripSpot"><option value="">Выберите...</option></select>
+                                <button class="add-btn" onclick="addNewSpot()">➕</button>
+                            </div>
+                        </div>
+                        <div class="form-group"><label>🌐 GPS широта</label><input type="text" id="tripLat" placeholder="55.123456"></div>
+                        <div class="form-group"><label>🌐 GPS долгота</label><input type="text" id="tripLng" placeholder="37.123456"></div>
+                        <div class="form-group"><label>⏰ Время начала</label><input type="time" id="tripStart"></div>
+                        <div class="form-group"><label>⏰ Время окончания</label><input type="time" id="tripEnd"></div>
+                        <div class="form-group">
+                            <label>⭐ Оценка (1-5)</label>
+                            <select id="tripRating">
+                                <option value="5">⭐⭐⭐⭐⭐ (Отлично)</option>
+                                <option value="4">⭐⭐⭐⭐ (Хорошо)</option>
+                                <option value="3" selected>⭐⭐⭐ (Средне)</option>
+                                <option value="2">⭐⭐ (Плохо)</option>
+                                <option value="1">⭐ (Ужасно)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🌦️ Погода</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>🌡️ Температура воздуха (°C)</label><input type="number" id="weatherTemp" step="0.5"></div>
+                        <div class="form-group"><label>🌊 Температура воды (°C)</label><input type="number" id="weatherWater" step="0.5"></div>
+                        <div class="form-group"><label>📊 Давление (мм рт. ст.)</label><input type="number" id="weatherPressure"></div>
+                        <div class="form-group">
+                            <label>💨 Ветер</label>
+                            <select id="weatherWind">
+                                <option value="">Выберите...</option>
+                                <option value="Северный">Северный</option>
+                                <option value="Восточный">Восточный</option>
+                                <option value="Южный">Южный</option>
+                                <option value="Западный">Западный</option>
+                                <option value="Безветренно">Безветренно</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>💨 Сила ветра (м/с)</label><input type="number" id="weatherWindSpeed" step="0.5"></div>
+                        <div class="form-group">
+                            <label>☁️ Облачность</label>
+                            <select id="weatherClouds">
+                                <option value="Ясно">Ясно</option>
+                                <option value="Облачно">Облачно</option>
+                                <option value="Пасмурно">Пасмурно</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🌧️ Осадки</label>
+                            <select id="weatherRain">
+                                <option value="Нет">Нет</option>
+                                <option value="Дождь">Дождь</option>
+                                <option value="Снег">Снег</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>🌙 Фаза Луны</label><input type="text" id="tripMoon" readonly style="background:#f0f4f8;"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🎯 Снасти и приманки</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>🍲 Прикормка</label><select id="tripFeed"><option value="">Выберите...</option></select></div>
+                        <div class="form-group"><label>🐛 Насадка</label><select id="tripBait"><option value="">Выберите...</option></select></div>
+                        <div class="form-group"><label>📏 Дистанция (м)</label><input type="number" id="tripDistance" step="0.5"></div>
+                        <div class="form-group"><label>📏 Глубина (м)</label><input type="number" id="tripDepth" step="0.1"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🐟 Улов <button class="btn-success" onclick="addFishRow()">➕ Добавить рыбу</button></h3>
+                    <div id="fishRows">
+                        <div class="fish-entry">
+                            <div class="form-group"><label>🐟 Вид рыбы</label><select class="fish-species"><option value="">Выберите...</option></select></div>
+                            <div class="form-group"><label>⚖️ Вес (г)</label><input type="number" class="fish-weight" step="1" placeholder="г"></div>
+                            <div class="form-group"><label>📏 Длина (см)</label><input type="number" class="fish-length" step="0.5" placeholder="см"></div>
+                            <div class="form-group"><label>⏰ Время поимки</label><input type="time" class="fish-time"></div>
+                            <div style="display:flex;align-items:end;padding-bottom:2px;"><button class="btn-danger" onclick="removeFishRow(this)">✕</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📝 Заметки</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width"><textarea id="tripNotes" rows="3" placeholder="Ваши заметки..." style="min-height:80px;"></textarea></div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-primary" onclick="saveTrip()">💾 Сохранить</button>
+                        <button class="btn-primary" onclick="saveTripAndContinue()" style="background:var(--accent2);">💾 Сохранить и добавить ещё</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ЖУРНАЛ ===== -->
+            <div class="page" id="page-journal">
+                <div class="page-title">🐟 <span>Журнал уловов</span></div>
+
+                <div class="filters-bar">
+                    <div class="filter-group"><label>Вид рыбы</label><select id="filterSpecies"><option value="">Все</option></select></div>
+                    <div class="filter-group"><label>Водоём</label><select id="filterPlace"><option value="">Все</option></select></div>
+                    <div class="filter-group"><label>Насадка</label><select id="filterBait"><option value="">Все</option></select></div>
+                    <div class="filter-group"><label>С</label><input type="date" id="filterDateFrom"></div>
+                    <div class="filter-group"><label>По</label><input type="date" id="filterDateTo"></div>
+                    <div class="filter-group"><label>Вес от (г)</label><input type="number" id="filterWeightFrom" placeholder="0"></div>
+                    <div class="filter-group"><label>Вес до (г)</label><input type="number" id="filterWeightTo" placeholder="∞"></div>
+                    <div class="filter-actions">
+                        <button class="btn-primary" onclick="applyFilters()">🔍 Применить</button>
+                        <button class="btn-warning" onclick="clearFilters()">✕ Сбросить</button>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Водоём</th>
+                                <th>Точка</th>
+                                <th>Вид</th>
+                                <th>Вес (г)</th>
+                                <th>Длина (см)</th>
+                                <th>Насадка</th>
+                                <th>Прикормка</th>
+                                <th>Время</th>
+                                <th>Глубина (м)</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="journalBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== ТОП-10 ===== -->
+            <div class="page" id="page-top">
+                <div class="page-title">🏆 <span>Топ-10 лучших рыбалок</span></div>
+                <div id="topList" class="top-list"></div>
+            </div>
+
+            <!-- ===== АТЛАС ===== -->
+            <div class="page" id="page-atlas">
+                <div class="page-title">🗺️ <span>Атлас мест</span></div>
+
+                <div class="form-section">
+                    <h3>➕ Добавить новое место</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Название места</label><input type="text" id="newPlaceName" placeholder="Например: Затон у старого моста"></div>
+                        <div class="form-group">
+                            <label>Водоём</label>
+                            <div class="form-group-with-btn">
+                                <select id="newPlaceWater"><option value="">Выберите...</option></select>
+                                <button class="add-btn" onclick="addNewWaterAtlas()">➕</button>
+                            </div>
+                        </div>
+                        <div class="form-group"><label>GPS широта</label><input type="text" id="newPlaceLat" placeholder="55.123456"></div>
+                        <div class="form-group"><label>GPS долгота</label><input type="text" id="newPlaceLng" placeholder="37.123456"></div>
+                        <div class="form-group"><label>Глубина (м)</label><input type="number" id="newPlaceDepth" step="0.1"></div>
+                        <div class="form-group full-width"><label>Описание</label><textarea id="newPlaceDesc" rows="2" placeholder="Описание места..." style="min-height:50px;"></textarea></div>
+                    </div>
+                    <div class="form-actions"><button class="btn-primary" onclick="savePlace()">💾 Сохранить место</button></div>
+                </div>
+
+                <div class="atlas-grid">
+                    <div class="map-placeholder">
+                        <div class="icon">🗺️</div>
+                        <h3 style="color:var(--primary);">Карта мест</h3>
+                        <p>Для отображения карты добавьте<br>API ключ Яндекс.Карт</p>
+                        <p style="font-size:0.8em;margin-top:10px;color:var(--text-light);">
+                            Список мест отображается справа
+                        </p>
+                    </div>
+                    <div class="places-list" id="placesList"></div>
+                </div>
+            </div>
+
+            <!-- ===== АНАЛИТИКА ===== -->
+            <div class="page" id="page-analytics">
+                <div class="page-title">📈 <span>Полная аналитика</span></div>
+
+                <div class="stats-grid" id="analyticsStats">
+                    <div class="stat-card gold"><div class="number" id="statFish">0</div><div class="label">Всего рыб</div></div>
+                    <div class="stat-card"><div class="number" id="statTrips">0</div><div class="label">Рыбалок</div></div>
+                    <div class="stat-card success"><div class="number" id="statWeight">0 кг</div><div class="label">Общий вес</div></div>
+                    <div class="stat-card"><div class="number" id="statAvg">0 г</div><div class="label">Средний вес</div></div>
+                    <div class="stat-card danger"><div class="number" id="statRecord">0 г</div><div class="label">Рекорд</div></div>
+                </div>
+
+                <div class="analytics-grid" id="analyticsInsights">
+                    <div class="analytics-card best"><h4>🏆 Лучшая рыбалка</h4><div class="value" id="bestTrip">—</div><div class="sub" id="bestTripDetail"></div></div>
+                    <div class="analytics-card"><h4>🎯 Лучшая насадка</h4><div class="value" id="bestBait">—</div><div class="sub" id="bestBaitDetail"></div></div>
+                    <div class="analytics-card"><h4>📍 Лучшее место</h4><div class="value" id="bestPlace">—</div><div class="sub" id="bestPlaceDetail"></div></div>
+                    <div class="analytics-card"><h4>🌙 Лучшая фаза Луны</h4><div class="value" id="bestMoon">—</div><div class="sub" id="bestMoonDetail"></div></div>
+                    <div class="analytics-card best"><h4>🌡️ Лучшая температура воды</h4><div class="value" id="bestWaterTemp">—</div><div class="sub">средний улов: <span id="bestWaterTempCatch">—</span></div></div>
+                    <div class="analytics-card best"><h4>💨 Лучшее давление</h4><div class="value" id="bestPressure">—</div><div class="sub">средний улов: <span id="bestPressureCatch">—</span></div></div>
+                    <div class="analytics-card best"><h4>🌬️ Лучший ветер</h4><div class="value" id="bestWind">—</div><div class="sub">средний улов: <span id="bestWindCatch">—</span></div></div>
+                    <div class="analytics-card best"><h4>⏰ Лучшие часы клёва</h4><div class="value" id="bestTime">—</div><div class="sub">средний улов: <span id="bestTimeCatch">—</span></div></div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container"><h4>📊 Улов по месяцам</h4><canvas id="chartAnalyticsMonthly"></canvas></div>
+                    <div class="chart-container"><h4>⏰ Улов по времени суток</h4><canvas id="chartAnalyticsTime"></canvas></div>
+                    <div class="chart-container"><h4>🌡️ Зависимость от температуры воды</h4><canvas id="chartAnalyticsWaterTemp"></canvas></div>
+                    <div class="chart-container"><h4>💨 Зависимость от давления</h4><canvas id="chartAnalyticsPressure"></canvas></div>
+                    <div class="chart-container"><h4>🌬️ Зависимость от ветра</h4><canvas id="chartAnalyticsWind"></canvas></div>
+                    <div class="chart-container"><h4>📍 Рейтинг водоёмов</h4><canvas id="chartAnalyticsPlaces"></canvas></div>
+                    <div class="chart-container"><h4>🎯 Рейтинг насадок</h4><canvas id="chartAnalyticsBaits"></canvas></div>
+                    <div class="chart-container"><h4>🌙 Клёв по фазам Луны</h4><canvas id="chartAnalyticsMoon"></canvas></div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>🎣 <span>Рыболовный Журнал PRO</span> — Профессиональный дневник рыболова v4.0 | © 2026</footer>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ================================================================ -->
+    <script>
+        // ============================================================
+        // 1. АВТОРИЗАЦИЯ
+        // ============================================================
+        const USERS_KEY = 'fishingUsers';
+        const CURRENT_USER_KEY = 'currentUser';
+
+        function getUsers() {
+            try { return JSON.parse(localStorage.getItem(USERS_KEY)) || {}; } catch { return {}; }
+        }
+
+        function saveUsers(users) { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
+
+        // Passwords must not be stored as plain readable text in localStorage.
+        // Uses SHA-256 via the Web Crypto API when available (requires a secure
+        // context: https:// or localhost). Falls back to a simple non-crypto
+        // hash for a local file:// page where Web Crypto is unavailable —
+        // that fallback is NOT cryptographically secure, but is still better
+        // than storing the password itself.
+        async function hashPassword(password) {
+            if (window.crypto && window.crypto.subtle && window.isSecureContext) {
+                const enc = new TextEncoder().encode(password);
+                const buf = await window.crypto.subtle.digest('SHA-256', enc);
+                return 'sha256:' + Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                hash = (Math.imul(31, hash) + password.charCodeAt(i)) | 0;
+            }
+            return 'fb:' + Math.abs(hash).toString(36) + ':' + password.length;
+        }
+
+        function getCurrentUser() { return localStorage.getItem(CURRENT_USER_KEY) || null; }
+
+        function setCurrentUser(username) {
+            username ? localStorage.setItem(CURRENT_USER_KEY, username) : localStorage.removeItem(CURRENT_USER_KEY);
+        }
+
+        function showRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('authError').style.display = 'none';
+            document.getElementById('authSuccess').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('authError').style.display = 'none';
+            document.getElementById('authSuccess').style.display = 'none';
+        }
+
+        function showAuthError(msg) {
+            const el = document.getElementById('authError');
+            el.textContent = msg;
+            el.style.display = 'block';
+            document.getElementById('authSuccess').style.display = 'none';
+        }
+
+        function showAuthSuccess(msg) {
+            const el = document.getElementById('authSuccess');
+            el.textContent = msg;
+            el.style.display = 'block';
+            document.getElementById('authError').style.display = 'none';
+        }
+
+        async function registerUser() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const password2 = document.getElementById('registerPassword2').value;
+
+            if (!username || !password) { showAuthError('Заполните все поля!'); return; }
+            if (password !== password2) { showAuthError('Пароли не совпадают!'); return; }
+            if (password.length < 4) { showAuthError('Пароль должен быть не менее 4 символов!'); return; }
+
+            const users = getUsers();
+            if (users[username]) { showAuthError('Пользователь уже существует!'); return; }
+
+            const passwordHash = await hashPassword(password);
+            users[username] = { passwordHash, data: { trips: [], places: [] } };
+            saveUsers(users);
+            showAuthSuccess('✅ Регистрация успешна! Войдите.');
+            showLogin();
+            document.getElementById('registerUsername').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerPassword2').value = '';
+        }
+
+        async function loginUser() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) { showAuthError('Введите логин и пароль!'); return; }
+
+            const users = getUsers();
+            const user = users[username];
+            if (!user) { showAuthError('Пользователь не найден!'); return; }
+
+            if (user.passwordHash !== undefined) {
+                const passwordHash = await hashPassword(password);
+                if (user.passwordHash !== passwordHash) { showAuthError('Неверный пароль!'); return; }
+            } else if (user.password !== undefined) {
+                // Legacy account created before hashing was added: verify against
+                // the stored plaintext once, then upgrade it to a hash.
+                if (user.password !== password) { showAuthError('Неверный пароль!'); return; }
+                user.passwordHash = await hashPassword(password);
+                delete user.password;
+                saveUsers(users);
+            } else {
+                showAuthError('Неверный пароль!'); return;
+            }
+
+            setCurrentUser(username);
+            document.getElementById('authPage').style.display = 'none';
+            document.getElementById('appContent').classList.add('active');
+            document.getElementById('currentUsername').textContent = username;
+            init();
+        }
+
+        function logoutUser() {
+            if (confirm('Выйти из аккаунта?')) {
+                setCurrentUser(null);
+                document.getElementById('appContent').classList.remove('active');
+                document.getElementById('authPage').style.display = 'flex';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginUsername').value = '';
+                showLogin();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                const users = getUsers();
+                if (users[currentUser]) {
+                    document.getElementById('authPage').style.display = 'none';
+                    document.getElementById('appContent').classList.add('active');
+                    document.getElementById('currentUsername').textContent = currentUser;
+                    init();
+                    return;
+                } else { setCurrentUser(null); }
+            }
+            document.getElementById('authPage').style.display = 'flex';
+            document.getElementById('appContent').classList.remove('active');
+            showLogin();
+        });
+
+        // ============================================================
+        // 2. ДАННЫЕ ПОЛЬЗОВАТЕЛЯ (ПОЛНОСТЬЮ ЧИСТЫЕ)
+        // ============================================================
+        function getUserData() {
+            const username = getCurrentUser();
+            if (!username) return null;
+            const users = getUsers();
+            return users[username] ? users[username].data : null;
+        }
+
+        function saveUserData(data) {
+            const username = getCurrentUser();
+            if (!username) return;
+            const users = getUsers();
+            if (users[username]) {
+                users[username].data = data;
+                saveUsers(users);
+            }
+        }
+
+        let data = { trips: [], places: [] };
+
+        function loadUserData() {
+            const userData = getUserData();
+            if (userData) {
+                data = userData;
+            } else {
+                data = { trips: [], places: [] };
+            }
+            // Migration: older records may have fish entries without a stable id.
+            // Edit/delete rely on ids, so backfill any missing ones.
+            let migrated = false;
+            data.trips.forEach(t => {
+                (t.fishes || []).forEach(f => {
+                    if (!f.id) { f.id = generateId(); migrated = true; }
+                });
+            });
+            if (migrated) saveData();
+        }
+
+        function saveData() { saveUserData(data); }
+
+        // ============================================================
+        // 3. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ============================================================
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        }
+
+        // User-entered text (place/spot names, notes, custom bait/feed) is inserted
+        // into innerHTML when rendering. Escape it so it's always treated as text,
+        // never as markup.
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        const fishSpecies = ['Окунь', 'Щука', 'Судак', 'Лещ', 'Карп', 'Сазан', 'Карась', 'Линь', 'Язь', 'Голавль', 'Плотва',
+            'Краснопёрка', 'Форель', 'Сёмга', 'Хариус', 'Налим', 'Сом', 'Жерех', 'Берш', 'Ёрш'
+        ];
+
+        const baitOptions = ['Червь', 'Мотыль', 'Опарыш', 'Кукуруза', 'Горох', 'Перловка', 'Тесто', 'Бойл', 'Пеллетс',
+            'Твистер', 'Виброхвост', 'Воблер', 'Блесна', 'Спиннербейт', 'Джиг', 'Силикон', 'Живец', 'Мясо', 'Личинка'
+        ];
+
+        const feedOptions = ['Пшено', 'Перловка', 'Горох', 'Макуха', 'Панировочные сухари', 'Геркулес', 'Земляной червь',
+            'Мотыль', 'Опарыш', 'Рыбная мука', 'Коммерческая смесь', 'Своя смесь', 'Без прикормки'
+        ];
+
+        function getFishFromTrip(trip) {
+            return trip.fishes.map(f => ({
+                ...f,
+                tripId: trip.id,
+                date: trip.date,
+                place: trip.place,
+                spot: trip.spot,
+                lat: trip.lat || '',
+                lng: trip.lng || '',
+                bait: trip.bait,
+                feed: trip.feed,
+                depth: trip.depth,
+                distance: trip.distance,
+                weather: trip.weather,
+                moon: trip.moon,
+                rating: trip.rating,
+                start: trip.start,
+                end: trip.end,
+                notes: trip.notes,
+                tripCreated: trip.createdAt
+            }));
+        }
+
+        function getAllFish() {
+            let all = [];
+            data.trips.forEach(t => { all = all.concat(getFishFromTrip(t)); });
+            return all;
+        }
+
+        // ============================================================
+        // 4. ОБНОВЛЕНИЕ СПРАВОЧНИКОВ
+        // ============================================================
+        function populateSelects() {
+            document.querySelectorAll('.fish-species, #filterSpecies, #editSpecies').forEach(sel => {
+                const current = sel.value;
+                sel.innerHTML = '<option value="">Выберите...</option>' +
+                    fishSpecies.map(s => `<option value="${s}">${s}</option>`).join('');
+                if (current && fishSpecies.includes(current)) sel.value = current;
+            });
+
+            document.querySelectorAll('#tripBait, #filterBait').forEach(sel => {
+                const current = sel.value;
+                sel.innerHTML = '<option value="">Выберите...</option>' +
+                    baitOptions.map(s => `<option value="${s}">${s}</option>`).join('');
+                if (current && baitOptions.includes(current)) sel.value = current;
+            });
+
+            document.querySelectorAll('#tripFeed').forEach(sel => {
+                const current = sel.value;
+                sel.innerHTML = '<option value="">Выберите...</option>' +
+                    feedOptions.map(s => `<option value="${s}">${s}</option>`).join('');
+                if (current && feedOptions.includes(current)) sel.value = current;
+            });
+
+            updateFilterOptions();
+        }
+
+        function updateFilterOptions() {
+            const allFish = getAllFish();
+
+            const places = [...new Set(allFish.map(f => f.place).filter(Boolean))];
+            const filterPlace = document.getElementById('filterPlace');
+            const currentPlace = filterPlace.value;
+            filterPlace.innerHTML = '<option value="">Все</option>' +
+                places.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('');
+            if (places.includes(currentPlace)) filterPlace.value = currentPlace;
+
+            const species = [...new Set(allFish.map(f => f.species).filter(Boolean))];
+            const filterSpecies = document.getElementById('filterSpecies');
+            const currentSpecies = filterSpecies.value;
+            filterSpecies.innerHTML = '<option value="">Все</option>' +
+                species.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+            if (species.includes(currentSpecies)) filterSpecies.value = currentSpecies;
+
+            const baits = [...new Set(allFish.map(f => f.bait).filter(Boolean))];
+            const filterBait = document.getElementById('filterBait');
+            const currentBait = filterBait.value;
+            filterBait.innerHTML = '<option value="">Все</option>' +
+                baits.map(b => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join('');
+            if (baits.includes(currentBait)) filterBait.value = currentBait;
+
+            const allPlaces = [...new Set(data.trips.map(t => t.place).concat(data.places.map(p => p.water)))];
+            document.querySelectorAll('#tripPlace, #newPlaceWater').forEach(sel => {
+                const current = sel.value;
+                sel.innerHTML = '<option value="">Выберите...</option>' +
+                    allPlaces.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('');
+                if (allPlaces.includes(current)) sel.value = current;
+            });
+
+            populateSpots();
+        }
+
+        function populateSpots() {
+            const sel = document.getElementById('tripSpot');
+            const current = sel.value;
+            sel.innerHTML = '<option value="">Выберите...</option>' +
+                data.places.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)}</option>`).join('');
+            if (current && data.places.some(p => p.name === current)) sel.value = current;
+        }
+
+        // ============================================================
+        // 5. ДОБАВЛЕНИЕ МЕСТ
+        // ============================================================
+        function addNewPlace() {
+            const name = prompt('Введите название нового водоёма:');
+            if (name && name.trim()) {
+                const trimmed = name.trim();
+                const placeSelect = document.getElementById('tripPlace');
+                const option = document.createElement('option');
+                option.value = trimmed;
+                option.textContent = trimmed;
+                placeSelect.appendChild(option);
+                placeSelect.value = trimmed;
+                updateFilterOptions();
+            }
+        }
+
+        // Same as addNewPlace(), but for the "Атлас" page's own water-body select,
+        // which previously had no way to add a new option at all.
+        function addNewWaterAtlas() {
+            const name = prompt('Введите название нового водоёма:');
+            if (name && name.trim()) {
+                const trimmed = name.trim();
+                const waterSelect = document.getElementById('newPlaceWater');
+                const option = document.createElement('option');
+                option.value = trimmed;
+                option.textContent = trimmed;
+                waterSelect.appendChild(option);
+                waterSelect.value = trimmed;
+            }
+        }
+
+        function addNewSpot() {
+            const name = prompt('Введите название новой точки:');
+            if (name && name.trim()) {
+                const trimmed = name.trim();
+                const water = document.getElementById('tripPlace').value || 'Неизвестный водоём';
+                data.places.push({
+                    id: generateId(),
+                    name: trimmed,
+                    water: water,
+                    lat: '',
+                    lng: '',
+                    depth: null,
+                    months: [],
+                    desc: ''
+                });
+                saveData();
+                populateSpots();
+                document.getElementById('tripSpot').value = trimmed;
+                updateFilterOptions();
+                renderAtlas();
+                alert('✅ Точка добавлена в атлас!');
+            }
+        }
+
+        // ============================================================
+        // 6. ФАЗА ЛУНЫ
+        // ============================================================
+        function updateMoonPhase() {
+            const dateInput = document.getElementById('tripDate');
+            if (dateInput.value) {
+                // Parse as local calendar date (not UTC) to avoid an off-by-one-day
+                // shift in timezones behind UTC, which shows the wrong moon phase.
+                const [y, m, d] = dateInput.value.split('-').map(Number);
+                const date = new Date(y, m - 1, d);
+                const phase = getMoonPhase(date);
+                document.getElementById('tripMoon').value = phase;
+            }
+        }
+
+        function getMoonPhase(date) {
+            const knownFull = new Date(2024, 0, 25);
+            const diffDays = Math.floor((date - knownFull) / (1000 * 60 * 60 * 24));
+            const cycle = 29.53058867;
+            const phase = ((diffDays % cycle) + cycle) % cycle;
+
+            if (phase < 1 || phase > 28) return 'Новолуние';
+            if (phase < 6) return 'Молодая Луна';
+            if (phase < 8.5) return 'Первая четверть';
+            if (phase < 13) return 'Растущая Луна';
+            if (phase < 15.5) return 'Полнолуние';
+            if (phase < 20) return 'Убывающая Луна';
+            if (phase < 22.5) return 'Последняя четверть';
+            return 'Старая Луна';
+        }
+
+        // ============================================================
+        // 7. ФОРМА: РЫБА
+        // ============================================================
+        function addFishRow() {
+            const container = document.getElementById('fishRows');
+            const row = document.createElement('div');
+            row.className = 'fish-entry';
+            row.innerHTML = `
+                <div class="form-group"><label>🐟 Вид рыбы</label><select class="fish-species"><option value="">Выберите...</option></select></div>
+                <div class="form-group"><label>⚖️ Вес (г)</label><input type="number" class="fish-weight" step="1" placeholder="г"></div>
+                <div class="form-group"><label>📏 Длина (см)</label><input type="number" class="fish-length" step="0.5" placeholder="см"></div>
+                <div class="form-group"><label>⏰ Время поимки</label><input type="time" class="fish-time"></div>
+                <div style="display:flex;align-items:end;padding-bottom:2px;"><button class="btn-danger" onclick="removeFishRow(this)">✕</button></div>
+            `;
+            row.querySelector('.fish-species').innerHTML = '<option value="">Выберите...</option>' +
+                fishSpecies.map(s => `<option value="${s}">${s}</option>`).join('');
+            container.appendChild(row);
+        }
+
+        function removeFishRow(btn) {
+            const row = btn.closest('.fish-entry');
+            if (document.querySelectorAll('.fish-entry').length > 1) {
+                row.remove();
+            } else {
+                alert('Должна быть хотя бы одна рыба!');
+            }
+        }
+
+        // ============================================================
+        // 8. СОХРАНЕНИЕ РЫБАЛКИ
+        // ============================================================
+        function getFormData() {
+            const fishes = [];
+            document.querySelectorAll('.fish-entry').forEach(row => {
+                const species = row.querySelector('.fish-species').value;
+                const weight = parseFloat(row.querySelector('.fish-weight').value);
+                const length = parseFloat(row.querySelector('.fish-length').value);
+                const time = row.querySelector('.fish-time').value;
+                if (species) {
+                    fishes.push({
+                        id: generateId(),
+                        species,
+                        weight: weight || 0,
+                        length: length || 0,
+                        time: time || '00:00'
+                    });
+                }
+            });
+
+            return {
+                date: document.getElementById('tripDate').value || new Date().toISOString().split('T')[0],
+                place: document.getElementById('tripPlace').value || 'Неизвестно',
+                spot: document.getElementById('tripSpot').value || '',
+                lat: document.getElementById('tripLat').value || '',
+                lng: document.getElementById('tripLng').value || '',
+                start: document.getElementById('tripStart').value || '00:00',
+                end: document.getElementById('tripEnd').value || '00:00',
+                rating: parseInt(document.getElementById('tripRating').value) || 3,
+                weather: {
+                    temp: parseFloat(document.getElementById('weatherTemp').value) || null,
+                    water: parseFloat(document.getElementById('weatherWater').value) || null,
+                    pressure: parseFloat(document.getElementById('weatherPressure').value) || null,
+                    wind: document.getElementById('weatherWind').value || '',
+                    windSpeed: parseFloat(document.getElementById('weatherWindSpeed').value) || null,
+                    clouds: document.getElementById('weatherClouds').value || '',
+                    rain: document.getElementById('weatherRain').value || ''
+                },
+                moon: document.getElementById('tripMoon').value || 'Неизвестно',
+                feed: document.getElementById('tripFeed').value || '',
+                bait: document.getElementById('tripBait').value || '',
+                distance: parseFloat(document.getElementById('tripDistance').value) || null,
+                depth: parseFloat(document.getElementById('tripDepth').value) || null,
+                notes: document.getElementById('tripNotes').value || '',
+                fishes: fishes
+            };
+        }
+
+        function saveTrip() {
+            const formData = getFormData();
+            if (formData.fishes.length === 0) {
+                alert('Добавьте хотя бы одну рыбу!');
+                return;
+            }
+
+            data.trips.push({
+                id: generateId(),
+                ...formData,
+                createdAt: Date.now()
+            });
+
+            saveData();
+            renderAll();
+            alert('✅ Рыбалка успешно сохранена!');
+            clearForm();
+            switchPage('home');
+        }
+
+        function saveTripAndContinue() {
+            const formData = getFormData();
+            if (formData.fishes.length === 0) {
+                alert('Добавьте хотя бы одну рыбу!');
+                return;
+            }
+
+            data.trips.push({
+                id: generateId(),
+                ...formData,
+                createdAt: Date.now()
+            });
+
+            saveData();
+            renderAll();
+            alert('✅ Рыбалка сохранена! Можете добавить следующую.');
+            clearForm();
+            document.getElementById('tripDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('fishRows').innerHTML = '';
+            addFishRow();
+            updateMoonPhase();
+            switchPage('add');
+        }
+
+        function clearForm() {
+            document.querySelectorAll('#page-add input, #page-add select, #page-add textarea').forEach(el => {
+                if (el.type !== 'submit' && el.type !== 'button') {
+                    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+                    else if (el.type === 'date') el.value = '';
+                    else if (el.type === 'time') el.value = '';
+                    else el.value = '';
+                }
+            });
+            document.getElementById('tripRating').value = '3';
+            document.getElementById('fishRows').innerHTML = '';
+            addFishRow();
+            updateMoonPhase();
+        }
+
+        // ============================================================
+        // 9. РЕДАКТИРОВАНИЕ
+        // ============================================================
+        let editIndex = null;
+        let editFish = null;
+
+        function openEditModal(index) {
+            const allFish = getAllFish();
+            if (index >= allFish.length) return;
+            editIndex = index;
+            editFish = allFish[index];
+
+            document.getElementById('editDate').value = editFish.date || '';
+            document.getElementById('editPlace').value = editFish.place || '';
+            document.getElementById('editSpot').value = editFish.spot || '';
+            document.getElementById('editSpecies').value = editFish.species || '';
+            document.getElementById('editWeight').value = editFish.weight || '';
+            document.getElementById('editLength').value = editFish.length || '';
+            document.getElementById('editBait').value = editFish.bait || '';
+            document.getElementById('editFeed').value = editFish.feed || '';
+            document.getElementById('editTime').value = editFish.time || '';
+            document.getElementById('editDepth').value = editFish.depth || '';
+            document.getElementById('editNotes').value = editFish.notes || '';
+
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            editIndex = null;
+            editFish = null;
+        }
+
+        function saveEdit() {
+            if (editIndex === null || !editFish) return;
+
+            const newDate = document.getElementById('editDate').value;
+            const newPlace = document.getElementById('editPlace').value.trim();
+            const newSpot = document.getElementById('editSpot').value.trim();
+            const newSpecies = document.getElementById('editSpecies').value;
+            const newWeight = parseFloat(document.getElementById('editWeight').value);
+            const newLength = parseFloat(document.getElementById('editLength').value);
+            const newBait = document.getElementById('editBait').value.trim();
+            const newFeed = document.getElementById('editFeed').value.trim();
+            const newTime = document.getElementById('editTime').value;
+            const newDepth = parseFloat(document.getElementById('editDepth').value);
+            const newNotes = document.getElementById('editNotes').value.trim();
+
+            if (!newSpecies) {
+                alert('Выберите вид рыбы!');
+                return;
+            }
+
+            const trip = data.trips.find(t => t.id === editFish.tripId);
+            if (trip) {
+                const fishIndex = trip.fishes.findIndex(f => f.id === editFish.id);
+                if (fishIndex !== -1) {
+                    trip.fishes[fishIndex].species = newSpecies;
+                    trip.fishes[fishIndex].weight = newWeight || 0;
+                    trip.fishes[fishIndex].length = newLength || 0;
+                    trip.fishes[fishIndex].time = newTime || '00:00';
+
+                    if (newDate) trip.date = newDate;
+                    if (newPlace) trip.place = newPlace;
+                    if (newSpot) trip.spot = newSpot;
+                    if (newBait) trip.bait = newBait;
+                    if (newFeed) trip.feed = newFeed;
+                    if (newDepth !== undefined && !isNaN(newDepth)) trip.depth = newDepth;
+                    if (newNotes) trip.notes = newNotes;
+
+                    saveData();
+                    renderAll();
+                    closeEditModal();
+                    alert('✅ Запись обновлена!');
+                }
+            }
+        }
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+
+        // ============================================================
+        // 10. РЕНДЕРИНГ
+        // ============================================================
+        function renderAll() {
+            renderAnalytics();
+            renderJournal();
+            renderTop10();
+            renderAtlas();
+            populateSelects();
+            updateFilterOptions();
+            saveData();
+        }
+
+        // ============================================================
+        // 11. АНАЛИТИКА
+        // ============================================================
+        function renderAnalytics() {
+            const allFish = getAllFish();
+            const totalFish = allFish.length;
+            const totalTrips = data.trips.length;
+            const totalWeight = allFish.reduce((sum, f) => sum + f.weight, 0);
+            const avgWeight = totalFish > 0 ? totalWeight / totalFish : 0;
+            const record = allFish.length > 0 ? Math.max(...allFish.map(f => f.weight)) : 0;
+
+            document.getElementById('statFish').textContent = totalFish;
+            document.getElementById('statTrips').textContent = totalTrips;
+            document.getElementById('statWeight').textContent = (totalWeight / 1000).toFixed(1) + ' кг';
+            document.getElementById('statAvg').textContent = Math.round(avgWeight) + ' г';
+            document.getElementById('statRecord').textContent = Math.round(record) + ' г';
+
+            let bestTrip = null;
+            let bestWeight = 0;
+            data.trips.forEach(t => {
+                const w = t.fishes.reduce((sum, f) => sum + f.weight, 0);
+                if (w > bestWeight) { bestWeight = w;
+                    bestTrip = t; }
+            });
+            if (bestTrip) {
+                document.getElementById('bestTrip').textContent = bestTrip.date + ' — ' + bestTrip.place;
+                document.getElementById('bestTripDetail').textContent =
+                    `🐟 ${bestTrip.fishes.length} рыб, ${(bestWeight/1000).toFixed(1)} кг`;
+            } else {
+                document.getElementById('bestTrip').textContent = '—';
+                document.getElementById('bestTripDetail').textContent = 'Нет данных';
+            }
+
+            const baitStats = {};
+            allFish.forEach(f => {
+                if (f.bait) {
+                    if (!baitStats[f.bait]) baitStats[f.bait] = { count: 0, weight: 0 };
+                    baitStats[f.bait].count++;
+                    baitStats[f.bait].weight += f.weight;
+                }
+            });
+            let bestBait = null;
+            let bestBaitScore = 0;
+            Object.keys(baitStats).forEach(b => {
+                const score = baitStats[b].weight / baitStats[b].count;
+                if (score > bestBaitScore && baitStats[b].count >= 2) {
+                    bestBaitScore = score;
+                    bestBait = b;
+                }
+            });
+            if (bestBait) {
+                document.getElementById('bestBait').textContent = bestBait;
+                document.getElementById('bestBaitDetail').textContent =
+                    `${baitStats[bestBait].count} рыб, средний ${Math.round(bestBaitScore)} г`;
+            } else {
+                document.getElementById('bestBait').textContent = '—';
+                document.getElementById('bestBaitDetail').textContent = 'Нет данных';
+            }
+
+            const placeStats = {};
+            allFish.forEach(f => {
+                if (f.place) {
+                    if (!placeStats[f.place]) placeStats[f.place] = { count: 0, weight: 0 };
+                    placeStats[f.place].count++;
+                    placeStats[f.place].weight += f.weight;
+                }
+            });
+            let bestPlace = null;
+            let bestPlaceScore = 0;
+            Object.keys(placeStats).forEach(p => {
+                const score = placeStats[p].weight / placeStats[p].count;
+                if (score > bestPlaceScore && placeStats[p].count >= 2) {
+                    bestPlaceScore = score;
+                    bestPlace = p;
+                }
+            });
+            if (bestPlace) {
+                document.getElementById('bestPlace').textContent = bestPlace;
+                document.getElementById('bestPlaceDetail').textContent =
+                    `${placeStats[bestPlace].count} рыб, средний ${Math.round(bestPlaceScore)} г`;
+            } else {
+                document.getElementById('bestPlace').textContent = '—';
+                document.getElementById('bestPlaceDetail').textContent = 'Нет данных';
+            }
+
+            const moonStats = {};
+            allFish.forEach(f => {
+                if (f.moon) {
+                    if (!moonStats[f.moon]) moonStats[f.moon] = { count: 0, weight: 0 };
+                    moonStats[f.moon].count++;
+                    moonStats[f.moon].weight += f.weight;
+                }
+            });
+            let bestMoon = null;
+            let bestMoonScore = 0;
+            Object.keys(moonStats).forEach(m => {
+                const score = moonStats[m].weight / moonStats[m].count;
+                if (score > bestMoonScore && moonStats[m].count >= 2) {
+                    bestMoonScore = score;
+                    bestMoon = m;
+                }
+            });
+            if (bestMoon) {
+                document.getElementById('bestMoon').textContent = bestMoon;
+                document.getElementById('bestMoonDetail').textContent =
+                    `${moonStats[bestMoon].count} рыб, средний ${Math.round(bestMoonScore)} г`;
+            } else {
+                document.getElementById('bestMoon').textContent = '—';
+                document.getElementById('bestMoonDetail').textContent = 'Нет данных';
+            }
+
+            // Погодная аналитика
+            const waterTempStats = {};
+            allFish.forEach(f => {
+                if (f.weather && f.weather.water !== null) {
+                    const temp = Math.round(f.weather.water);
+                    if (!waterTempStats[temp]) waterTempStats[temp] = { count: 0, weight: 0 };
+                    waterTempStats[temp].count++;
+                    waterTempStats[temp].weight += f.weight;
+                }
+            });
+            let bestWaterTemp = null;
+            let bestWaterTempScore = 0;
+            Object.keys(waterTempStats).forEach(k => {
+                const score = waterTempStats[k].weight / waterTempStats[k].count;
+                if (score > bestWaterTempScore && waterTempStats[k].count >= 2) {
+                    bestWaterTempScore = score;
+                    bestWaterTemp = k;
+                }
+            });
+            if (bestWaterTemp) {
+                document.getElementById('bestWaterTemp').textContent = `${bestWaterTemp}°C`;
+                document.getElementById('bestWaterTempCatch').textContent =
+                    `${Math.round(bestWaterTempScore)} г (${waterTempStats[bestWaterTemp].count} рыб)`;
+            }
+
+            const pressureStats = {};
+            allFish.forEach(f => {
+                if (f.weather && f.weather.pressure !== null) {
+                    const p = Math.round(f.weather.pressure / 5) * 5;
+                    if (!pressureStats[p]) pressureStats[p] = { count: 0, weight: 0 };
+                    pressureStats[p].count++;
+                    pressureStats[p].weight += f.weight;
+                }
+            });
+            let bestPressure = null;
+            let bestPressureScore = 0;
+            Object.keys(pressureStats).forEach(k => {
+                const score = pressureStats[k].weight / pressureStats[k].count;
+                if (score > bestPressureScore && pressureStats[k].count >= 2) {
+                    bestPressureScore = score;
+                    bestPressure = k;
+                }
+            });
+            if (bestPressure) {
+                document.getElementById('bestPressure').textContent = `${bestPressure} мм`;
+                document.getElementById('bestPressureCatch').textContent =
+                    `${Math.round(bestPressureScore)} г (${pressureStats[bestPressure].count} рыб)`;
+            }
+
+            const windStats = {};
+            allFish.forEach(f => {
+                if (f.weather && f.weather.wind) {
+                    const w = f.weather.wind;
+                    if (!windStats[w]) windStats[w] = { count: 0, weight: 0 };
+                    windStats[w].count++;
+                    windStats[w].weight += f.weight;
+                }
+            });
+            let bestWind = null;
+            let bestWindScore = 0;
+            Object.keys(windStats).forEach(k => {
+                const score = windStats[k].weight / windStats[k].count;
+                if (score > bestWindScore && windStats[k].count >= 2) {
+                    bestWindScore = score;
+                    bestWind = k;
+                }
+            });
+            if (bestWind) {
+                document.getElementById('bestWind').textContent = bestWind;
+                document.getElementById('bestWindCatch').textContent =
+                    `${Math.round(bestWindScore)} г (${windStats[bestWind].count} рыб)`;
+            }
+
+            const timeStats = {};
+            allFish.forEach(f => {
+                if (f.time) {
+                    const hour = parseInt(f.time.split(':')[0]);
+                    const period = hour < 6 ? 'Ночь' : hour < 10 ? 'Утро' : hour < 14 ? 'День' : hour < 18 ? 'Вечер' :
+                        'Ночь';
+                    if (!timeStats[period]) timeStats[period] = { count: 0, weight: 0 };
+                    timeStats[period].count++;
+                    timeStats[period].weight += f.weight;
+                }
+            });
+            let bestTime = null;
+            let bestTimeScore = 0;
+            Object.keys(timeStats).forEach(k => {
+                const score = timeStats[k].weight / timeStats[k].count;
+                if (score > bestTimeScore && timeStats[k].count >= 2) {
+                    bestTimeScore = score;
+                    bestTime = k;
+                }
+            });
+            if (bestTime) {
+                document.getElementById('bestTime').textContent = bestTime;
+                document.getElementById('bestTimeCatch').textContent =
+                    `${Math.round(bestTimeScore)} г (${timeStats[bestTime].count} рыб)`;
+            }
+
+            renderAnalyticsCharts(allFish);
+        }
+
+        // ============================================================
+        // 12. ГРАФИКИ
+        // ============================================================
+        let chartInstances = {};
+
+        function destroyChart(id) {
+            if (chartInstances[id]) {
+                chartInstances[id].destroy();
+                delete chartInstances[id];
+            }
+        }
+
+        function renderAnalyticsCharts(allFish) {
+            if (allFish.length === 0) {
+                ['chartAnalyticsMonthly', 'chartAnalyticsTime', 'chartAnalyticsWaterTemp',
+                    'chartAnalyticsPressure', 'chartAnalyticsWind', 'chartAnalyticsPlaces',
+                    'chartAnalyticsBaits', 'chartAnalyticsMoon'
+                ].forEach(id => {
+                    const canvas = document.getElementById(id);
+                    if (canvas) {
+                        const ctx = canvas.getContext('2d');
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#6a8a8a';
+                        ctx.font = '16px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('Нет данных', canvas.width / 2, canvas.height / 2);
+                    }
+                });
+                return;
+            }
+
+            // Улов по месяцам
+            const monthData = {};
+            allFish.forEach(f => {
+                if (f.date) {
+                    const month = f.date.substring(0, 7);
+                    if (!monthData[month]) monthData[month] = 0;
+                    monthData[month] += f.weight;
+                }
+            });
+            const sortedMonths = Object.keys(monthData).sort();
+            if (sortedMonths.length > 0) {
+                destroyChart('analyticsMonthly');
+                const ctx1 = document.getElementById('chartAnalyticsMonthly').getContext('2d');
+                chartInstances['analyticsMonthly'] = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedMonths,
+                        datasets: [{ label: 'Улов (г)', data: sortedMonths.map(m => monthData[m]),
+                            backgroundColor: 'rgba(26,106,122,0.7)', borderColor: 'rgba(26,106,122,1)',
+                            borderWidth: 2 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true,
+                                title: { display: true, text: 'Вес (г)' } } } }
+                });
+            }
+
+            // Улов по времени суток
+            const timeData = { 'Ночь': 0, 'Утро': 0, 'День': 0, 'Вечер': 0 };
+            allFish.forEach(f => {
+                if (f.time) {
+                    const hour = parseInt(f.time.split(':')[0]);
+                    const period = hour < 6 ? 'Ночь' : hour < 10 ? 'Утро' : hour < 14 ? 'День' : hour < 18 ? 'Вечер' :
+                        'Ночь';
+                    timeData[period] += f.weight;
+                }
+            });
+            const timeLabels = Object.keys(timeData).filter(k => timeData[k] > 0);
+            if (timeLabels.length > 0) {
+                destroyChart('analyticsTime');
+                const ctx2 = document.getElementById('chartAnalyticsTime').getContext('2d');
+                chartInstances['analyticsTime'] = new Chart(ctx2, {
+                    type: 'pie',
+                    data: {
+                        labels: timeLabels,
+                        datasets: [{ data: timeLabels.map(k => timeData[k]),
+                            backgroundColor: ['#2c3e50', '#3498db', '#f1c40f', '#e67e22'], borderWidth: 2 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                });
+            }
+
+            // Зависимость от температуры воды
+            const waterData = {};
+            allFish.forEach(f => {
+                if (f.weather && f.weather.water !== null) {
+                    const temp = Math.round(f.weather.water);
+                    if (!waterData[temp]) waterData[temp] = [];
+                    waterData[temp].push(f.weight);
+                }
+            });
+            const waterLabels = Object.keys(waterData).sort();
+            if (waterLabels.length > 1) {
+                const waterAverages = waterLabels.map(k => {
+                    const vals = waterData[k];
+                    return vals.reduce((a, b) => a + b, 0) / vals.length;
+                });
+                destroyChart('analyticsWaterTemp');
+                const ctx3 = document.getElementById('chartAnalyticsWaterTemp').getContext('2d');
+                chartInstances['analyticsWaterTemp'] = new Chart(ctx3, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Средний вес',
+                            data: waterLabels.map((k, i) => ({ x: parseFloat(k), y: waterAverages[i] })),
+                            backgroundColor: 'rgba(52,152,219,0.7)',
+                            borderColor: 'rgba(52,152,219,1)',
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { x: { title: { display: true, text: 'Температура воды (°C)' } },
+                        y: { title: { display: true, text: 'Средний вес (г)' }, beginAtZero: true } }
+                    }
+                });
+            }
+
+            // Зависимость от давления
+            const pressureData = {};
+            allFish.forEach(f => {
+                if (f.weather && f.weather.pressure !== null) {
+                    const p = Math.round(f.weather.pressure / 5) * 5;
+                    if (!pressureData[p]) pressureData[p] = [];
+                    pressureData[p].push(f.weight);
+                }
+            });
+            const pressureLabels = Object.keys(pressureData).sort();
+            if (pressureLabels.length > 1) {
+                const pressureAverages = pressureLabels.map(k => {
+                    const vals = pressureData[k];
+                    return vals.reduce((a, b) => a + b, 0) / vals.length;
+                });
+                destroyChart('analyticsPressure');
+                const ctx4 = document.getElementById('chartAnalyticsPressure').getContext('2d');
+                chartInstances['analyticsPressure'] = new Chart(ctx4, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Средний вес',
+                            data: pressureLabels.map((k, i) => ({ x: parseFloat(k), y: pressureAverages[i] })),
+                            backgroundColor: 'rgba(46,204,113,0.7)',
+                            borderColor: 'rgba(46,204,113,1)',
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { x: { title: { display: true, text: 'Давление (мм рт. ст.)' } },
+                        y: { title: { display: true, text: 'Средний вес (г)' }, beginAtZero: true } }
+                    }
+                });
+            }
+
+            // Зависимость от ветра
+            const windData = {};
+            allFish.forEach(f => {
+                if (f.weather && f.weather.wind) {
+                    const w = f.weather.wind;
+                    if (!windData[w]) windData[w] = [];
+                    windData[w].push(f.weight);
+                }
+            });
+            const windLabels = Object.keys(windData);
+            if (windLabels.length > 0) {
+                const windAverages = windLabels.map(k => {
+                    const vals = windData[k];
+                    return vals.reduce((a, b) => a + b, 0) / vals.length;
+                });
+                destroyChart('analyticsWind');
+                const ctx5 = document.getElementById('chartAnalyticsWind').getContext('2d');
+                chartInstances['analyticsWind'] = new Chart(ctx5, {
+                    type: 'bar',
+                    data: {
+                        labels: windLabels,
+                        datasets: [{ label: 'Средний вес (г)', data: windAverages,
+                            backgroundColor: 'rgba(155,89,182,0.7)', borderColor: 'rgba(155,89,182,1)',
+                            borderWidth: 2 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true,
+                                title: { display: true, text: 'Средний вес (г)' } } } }
+                });
+            }
+
+            // Рейтинг водоёмов
+            const placeData = {};
+            allFish.forEach(f => {
+                if (f.place) {
+                    if (!placeData[f.place]) placeData[f.place] = 0;
+                    placeData[f.place] += f.weight;
+                }
+            });
+            const sortedPlaceData = Object.keys(placeData).sort((a, b) => placeData[b] - placeData[a]).slice(0, 8);
+            if (sortedPlaceData.length > 0) {
+                destroyChart('analyticsPlaces');
+                const ctx6 = document.getElementById('chartAnalyticsPlaces').getContext('2d');
+                chartInstances['analyticsPlaces'] = new Chart(ctx6, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedPlaceData,
+                        datasets: [{ label: 'Улов (г)', data: sortedPlaceData.map(p => placeData[p]),
+                            backgroundColor: 'rgba(231,76,60,0.7)', borderColor: 'rgba(231,76,60,1)',
+                            borderWidth: 2 }]
+                    },
+                    options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, title: { display: true, text: 'Вес (г)' } } } }
+                });
+            }
+
+            // Рейтинг насадок
+            const baitData = {};
+            allFish.forEach(f => {
+                if (f.bait) {
+                    if (!baitData[f.bait]) baitData[f.bait] = 0;
+                    baitData[f.bait] += f.weight;
+                }
+            });
+            const sortedBaitData = Object.keys(baitData).sort((a, b) => baitData[b] - baitData[a]).slice(0, 8);
+            if (sortedBaitData.length > 0) {
+                destroyChart('analyticsBaits');
+                const ctx7 = document.getElementById('chartAnalyticsBaits').getContext('2d');
+                chartInstances['analyticsBaits'] = new Chart(ctx7, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedBaitData,
+                        datasets: [{ label: 'Улов (г)', data: sortedBaitData.map(b => baitData[b]),
+                            backgroundColor: 'rgba(255,215,0,0.7)', borderColor: 'rgba(255,215,0,1)',
+                            borderWidth: 2 }]
+                    },
+                    options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, title: { display: true, text: 'Вес (г)' } } } }
+                });
+            }
+
+            // Клёв по фазам Луны
+            const moonData = {};
+            allFish.forEach(f => {
+                if (f.moon) {
+                    if (!moonData[f.moon]) moonData[f.moon] = 0;
+                    moonData[f.moon] += f.weight;
+                }
+            });
+            const moonOrder = ['Новолуние', 'Молодая Луна', 'Первая четверть', 'Растущая Луна', 'Полнолуние',
+                'Убывающая Луна', 'Последняя четверть', 'Старая Луна'
+            ];
+            const moonLabels = moonOrder.filter(m => moonData[m]);
+            if (moonLabels.length > 0) {
+                destroyChart('analyticsMoon');
+                const ctx8 = document.getElementById('chartAnalyticsMoon').getContext('2d');
+                chartInstances['analyticsMoon'] = new Chart(ctx8, {
+                    type: 'bar',
+                    data: {
+                        labels: moonLabels,
+                        datasets: [{ label: 'Улов (г)', data: moonLabels.map(m => moonData[m] || 0),
+                            backgroundColor: 'rgba(255,167,38,0.7)', borderColor: 'rgba(255,167,38,1)',
+                            borderWidth: 2 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true,
+                                title: { display: true, text: 'Вес (г)' } } } }
+                });
+            }
+        }
+
+        // ============================================================
+        // 13. ЖУРНАЛ
+        // ============================================================
+        function renderJournal() {
+            const allFish = getAllFish();
+            const tbody = document.getElementById('journalBody');
+
+            if (allFish.length === 0) {
+                tbody.innerHTML =
+                    `<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--text-light);">🐟 Нет записей. Добавьте свою первую рыбалку!</td></tr>`;
+                return;
+            }
+
+            const filtered = applyFiltersToData(allFish);
+            tbody.innerHTML = filtered.map((f, index) => {
+                const realIndex = allFish.indexOf(f);
+                const weightClass = f.weight > 1000 ? 'color:var(--danger);font-weight:700;' :
+                    f.weight > 500 ? 'color:var(--warning);font-weight:600;' :
+                    'color:var(--success);';
+                return `<tr class="entry-row">
+                    <td>${escapeHtml(f.date) || '—'}</td>
+                    <td>${escapeHtml(f.place) || '—'}</td>
+                    <td>${escapeHtml(f.spot) || '—'}</td>
+                    <td><span class="badge badge-fish">${escapeHtml(f.species)}</span></td>
+                    <td style="${weightClass}">${f.weight} г</td>
+                    <td>${f.length || '—'}</td>
+                    <td><span class="badge badge-bait">${escapeHtml(f.bait) || '—'}</span></td>
+                    <td>${escapeHtml(f.feed) || '—'}</td>
+                    <td>${f.time || '—'}</td>
+                    <td>${f.depth || '—'}</td>
+                    <td>
+                        <button class="btn-edit" onclick="openEditModal(${realIndex})" title="Редактировать">✏️</button>
+                        <button class="btn-danger" onclick="deleteFish(${realIndex})" style="padding:4px 10px;font-size:11px;" title="Удалить">🗑️</button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function deleteFish(index) {
+            if (!confirm('Удалить эту запись?')) return;
+            const allFish = getAllFish();
+            if (index >= allFish.length) return;
+            const fish = allFish[index];
+            const trip = data.trips.find(t => t.id === fish.tripId);
+            if (trip) {
+                const fishIndex = trip.fishes.findIndex(f => f.id === fish.id);
+                if (fishIndex !== -1) {
+                    trip.fishes.splice(fishIndex, 1);
+                    if (trip.fishes.length === 0) {
+                        const tripIndex = data.trips.indexOf(trip);
+                        if (tripIndex !== -1) data.trips.splice(tripIndex, 1);
+                    }
+                    saveData();
+                    renderAll();
+                }
+            }
+        }
+
+        // ============================================================
+        // 14. ФИЛЬТРЫ
+        // ============================================================
+        function getFilterValues() {
+            return {
+                species: document.getElementById('filterSpecies').value,
+                place: document.getElementById('filterPlace').value,
+                bait: document.getElementById('filterBait').value,
+                dateFrom: document.getElementById('filterDateFrom').value,
+                dateTo: document.getElementById('filterDateTo').value,
+                weightFrom: parseFloat(document.getElementById('filterWeightFrom').value) || 0,
+                weightTo: parseFloat(document.getElementById('filterWeightTo').value) || Infinity
+            };
+        }
+
+        function applyFiltersToData(allFish) {
+            const filters = getFilterValues();
+            return allFish.filter(f => {
+                if (filters.species && f.species !== filters.species) return false;
+                if (filters.place && f.place !== filters.place) return false;
+                if (filters.bait && f.bait !== filters.bait) return false;
+                if (filters.dateFrom && f.date < filters.dateFrom) return false;
+                if (filters.dateTo && f.date > filters.dateTo) return false;
+                if (f.weight < filters.weightFrom) return false;
+                if (f.weight > filters.weightTo) return false;
+                return true;
+            });
+        }
+
+        function applyFilters() { renderJournal(); }
+
+        function clearFilters() {
+            document.getElementById('filterSpecies').value = '';
+            document.getElementById('filterPlace').value = '';
+            document.getElementById('filterBait').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            document.getElementById('filterWeightFrom').value = '';
+            document.getElementById('filterWeightTo').value = '';
+            renderJournal();
+        }
+
+        // ============================================================
+        // 15. ТОП-10
+        // ============================================================
+        function renderTop10() {
+            const container = document.getElementById('topList');
+            if (data.trips.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><span class="emoji">🏆</span>Нет данных для рейтинга.</div>`;
+                return;
+            }
+
+            const rated = data.trips.map(t => {
+                const totalWeight = t.fishes.reduce((sum, f) => sum + f.weight, 0);
+                const count = t.fishes.length;
+                const score = totalWeight * (1 + count / 5) * (t.rating / 3);
+                return { ...t, totalWeight, count, score };
+            });
+            rated.sort((a, b) => b.score - a.score);
+            const top10 = rated.slice(0, 10);
+
+            const medals = ['🥇', '🥈', '🥉'];
+            const rankClasses = ['gold', 'silver', 'bronze'];
+
+            container.innerHTML = top10.map((t, i) => `
+                <div class="top-item">
+                    <div class="rank ${i < 3 ? rankClasses[i] : ''}">${i < 3 ? medals[i] : `#${i+1}`}</div>
+                    <div class="info">
+                        <div class="name">${escapeHtml(t.date)} — ${escapeHtml(t.place)}</div>
+                        <div class="meta">🐟 ${t.count} рыб | ⭐ ${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
+                    </div>
+                    <div class="weight">${(t.totalWeight/1000).toFixed(1)} кг</div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // 16. АТЛАС
+        // ============================================================
+        function renderAtlas() {
+            const container = document.getElementById('placesList');
+
+            if (data.places.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state"><span class="emoji">🗺️</span>Нет сохранённых мест.<br>Добавьте первое место!</div>`;
+                return;
+            }
+
+            container.innerHTML = data.places.map(p => `
+                <div class="place-item">
+                    <h5>${escapeHtml(p.name)}</h5>
+                    <div class="coords">${escapeHtml(p.lat) || '—'}, ${escapeHtml(p.lng) || '—'}</div>
+                    <div style="font-size:0.8em;color:var(--text-light);">${escapeHtml(p.water) || '—'}</div>
+                    <div style="font-size:0.8em;color:var(--text-light);">Глубина: ${p.depth || '—'} м</div>
+                    <div style="margin-top:6px;">
+                        <button class="btn-danger" onclick="deletePlace('${p.id}')" style="padding:2px 10px;font-size:10px;">🗑️ Удалить</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function savePlace() {
+            const name = document.getElementById('newPlaceName').value.trim();
+            const water = document.getElementById('newPlaceWater').value;
+            const lat = document.getElementById('newPlaceLat').value.trim();
+            const lng = document.getElementById('newPlaceLng').value.trim();
+            const depth = parseFloat(document.getElementById('newPlaceDepth').value) || null;
+            const desc = document.getElementById('newPlaceDesc').value.trim();
+
+            if (!name || !water) {
+                alert('Заполните название и водоём!');
+                return;
+            }
+
+            data.places.push({
+                id: generateId(),
+                name,
+                water,
+                lat,
+                lng,
+                depth,
+                months: [],
+                desc,
+                createdAt: Date.now()
+            });
+
+            saveData();
+            renderAll();
+            alert('✅ Место добавлено!');
+            document.getElementById('newPlaceName').value = '';
+            document.getElementById('newPlaceLat').value = '';
+            document.getElementById('newPlaceLng').value = '';
+            document.getElementById('newPlaceDepth').value = '';
+            document.getElementById('newPlaceDesc').value = '';
+            switchPage('atlas');
+        }
+
+        function deletePlace(id) {
+            if (!confirm('Удалить это место?')) return;
+            data.places = data.places.filter(p => p.id !== id);
+            saveData();
+            renderAll();
+        }
+
+        // ============================================================
+        // 17. ЭКСПОРТ / ИМПОРТ
+        // ============================================================
+        function exportData() {
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fishing_journal_${getCurrentUser()}_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.trips && imported.places) {
+                        if (confirm('Импортировать данные? Текущие данные будут заменены.')) {
+                            data.trips = imported.trips;
+                            data.places = imported.places;
+                            saveData();
+                            renderAll();
+                            alert('✅ Данные импортированы!');
+                        }
+                    } else {
+                        alert('❌ Неверный формат!');
+                    }
+                } catch (err) {
+                    alert('❌ Ошибка: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Lets a user clear out old/test entries (e.g. leftover from earlier
+        // testing in the same browser storage) without needing devtools.
+        // Suggest exporting first, since this cannot be undone.
+        function resetAllData() {
+            if (!confirm('Удалить ВСЕ уловы и места этого аккаунта? Это действие необратимо.\n\nСовет: перед этим можно нажать «Экспорт», чтобы сохранить резервную копию.')) return;
+            data = { trips: [], places: [] };
+            saveData();
+            renderAll();
+            switchPage('home');
+            alert('✅ Данные аккаунта полностью очищены.');
+        }
+
+        // ============================================================
+        // 18. НАВИГАЦИЯ (ГЛАВНАЯ ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ)
+        // ============================================================
+        function switchPage(pageId) {
+            // Скрываем все страницы
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            
+            // Показываем нужную
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Обновляем активную кнопку в навигации
+            document.querySelectorAll('.nav-tab').forEach(t => {
+                t.classList.remove('active');
+                if (t.dataset.page === pageId) {
+                    t.classList.add('active');
+                }
+            });
+
+            // Обновляем графики если переключились на аналитику
+            if (pageId === 'analytics') {
+                setTimeout(() => renderAnalyticsCharts(getAllFish()), 100);
+            }
+        }
+
+        // Навешиваем обработчики на кнопки навигации
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const pageId = this.dataset.page;
+                    if (pageId) {
+                        switchPage(pageId);
+                    }
+                });
+            });
+        });
+
+        // ============================================================
+        // 19. ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        function init() {
+            loadUserData();
+            renderAll();
+            document.getElementById('tripDate').value = new Date().toISOString().split('T')[0];
+            updateMoonPhase();
+            document.getElementById('tripDate').addEventListener('change', updateMoonPhase);
+
+            // Убедимся, что главная страница активна
+            switchPage('home');
+
+            console.log('🎣 Рыболовный Журнал PRO v4.0 загружен!');
+            console.log('📊 Данных пока нет — добавьте первую рыбалку!');
+        }
+    </script>
+
+</body>
+</html>
